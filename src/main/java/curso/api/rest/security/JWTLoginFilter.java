@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import curso.api.rest.model.Usuario;
 
-//estabelece o nosso gerenciador de token
+//estabelece o gerenciador de token
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
 	protected JWTLoginFilter(String url, AuthenticationManager authenticationManager) {
@@ -35,10 +35,10 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
 
-		// pega o token para validar
+		// valida o token
 		Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 
-		// retorna o usuario login, senha e acessos -permissoes
+		// retorna o usuario login, senha 
 		return getAuthenticationManager()
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getLogin(), user.getSenha()));
 
