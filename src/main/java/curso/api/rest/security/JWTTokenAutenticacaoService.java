@@ -17,9 +17,8 @@ import curso.api.rest.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-/*Classe que cria o token e que valida o token do usuario para cada sessao
- * esta classe no metodo de validacao (authentication) 
- * depende de uma classe auxiliar (ver ApplicationContextLoad - q busca usuario no DB)*/
+/*Classe que cria o token e que valida o token do usuario para cada sessao 
+ * depende de uma classe auxiliar (ver ApplicationContextLoad - busca usuario no DB)*/
 @Service
 @Component
 public class JWTTokenAutenticacaoService {
@@ -27,10 +26,10 @@ public class JWTTokenAutenticacaoService {
 	// define a validade do token, quanto tempo dura em milesegundos(aqui 2 dias)
 	private static final long EXPIRATION_TIME = 172800000;
 
-	// uma senha unica para compor a autenticacao e ajuda na seguranca - pode ser qlr uma
+	// uma senha unica para compor a autenticacao e ajuda na seguranca - a escolha
 	private static final String SECRET = "Senha ExtremamenteSecreta";
 
-	// Prefixo padrao de token - autorizathion : Bearer
+	// Prefixo padrao de token - (autorizathion) : Bearer
 	private static final String TOKEN_PREFIX = "Bearer";
 
 	// Sufixo padrao de token - Autorizathion : Bearer
@@ -41,17 +40,17 @@ public class JWTTokenAutenticacaoService {
 		//montagem do token - criando o token novo
 		String JWT = Jwts.builder()//chama o gerador de token
 						.setSubject(username)// adiciona o usuario no token
-						.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))//pega o o dia e hora atual do sistema e soma com o tempo q defini na var ET para a expiracao do token
-						.signWith(SignatureAlgorithm.HS512, SECRET).compact();//hs512 e uma criacao random de senha para o token e adiciona com a var secret e depois compact
+						.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))//dia e hora atual do sistema para expiracao do token (+ var ET)
+						.signWith(SignatureAlgorithm.HS512, SECRET).compact();//hs512 criacao random de senha para o token + var secret
 		
 		//concatena - soma o token gerado com o prefixo
 		String token = TOKEN_PREFIX + " " + JWT;// ex: Bearer 5847568734658475 (token random)
 		
-		//adiciona no cabecalho http
-		response.addHeader(HEADER_STRING, token);// ex: Autorizathion : Bearer 657657656787 (exemplo do token completo
+		//adiciona ao cabecalho http
+		response.addHeader(HEADER_STRING, token);// ex: Autorizathion:Bearer 5847568734658475 (ex do token completo)
 		
 		//liberando resposta para porta diferente do projeto - angular
-		//para o angular -parametro de resposta - para todas as portas, qlqr server
+		//para o angular -parametro de resposta - * generico
 		if(response.getHeader("Access-Control-Allow-Origin") == null) {
 		   response.addHeader("Access-Control-Allow-Origin", "*");
 			}
@@ -72,7 +71,7 @@ public class JWTTokenAutenticacaoService {
 			//faz a validacao do token do usuario na requisicao
 			String user = Jwts.parser().setSigningKey(SECRET)//desmonta - tira o SECRET do token
 							.parseClaimsJws(token.replace(TOKEN_PREFIX, ""))// desmonta - tira o Bearer
-							.getBody().getSubject();// descobre o usuario ex: jao
+							.getBody().getSubject();// descobre o usuario ex: usuario1
 			
 			if(user !=null) {
 				Usuario usuario = ApplicationContextLoad.getaApplicationContext()
@@ -83,7 +82,7 @@ public class JWTTokenAutenticacaoService {
 						return new UsernamePasswordAuthenticationToken(
 								usuario.getLogin(),
 								usuario.getSenha(),
-								usuario.getAuthorities());// autorizacao de ROLE
+								usuario.getAuthorities());// autorizacao - ROLE
 					}
 			}
 		}
@@ -94,7 +93,7 @@ public class JWTTokenAutenticacaoService {
 		
 	}
 
-	private void liberacaoCors(HttpServletResponse response) {
+	private void liberacaoCors(HttpServletResponse response) { // CORS generico
 		
 		if(response.getHeader("Access-Control-Allow-Origin") == null) {
 		   response.addHeader("Access-Control-Allow-Origin", "*");
