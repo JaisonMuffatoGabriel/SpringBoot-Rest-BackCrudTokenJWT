@@ -31,8 +31,6 @@ public class IndexController {
 	private UsuarioRepository usuarioRepository;
 	
 	@GetMapping(value = "/",produces = "application/json")
-	//@Cacheable("cacheusuariolist") -se tiver entradas novas nao atualiza
-	//@CacheEvict(value="cacheusuario", allEntries = true)//apaga caches nao em uso e mantem uma so
 	@CachePut("cacheusuario")//mantem a cache atualizada com entradas e saidas
 	public ResponseEntity<List<Usuario>> BuscaTodos() {
 		
