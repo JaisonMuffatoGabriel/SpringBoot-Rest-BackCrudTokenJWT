@@ -39,23 +39,23 @@ public class Usuario implements UserDetails{
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Telefone> telefones;
 	
-	@OneToMany(fetch = FetchType.EAGER) // fetch - carrega tudo o q tem na tabela
+	@OneToMany(fetch = FetchType.EAGER) //fetch - carrega toda a tabela
 	@JoinTable(name = "usuarios_role", //nome da nova tabela
-				uniqueConstraints = @UniqueConstraint( //nome nao pode se repetir
-						columnNames = {"usuario_id", "role_id"}, // colunas de ond vem os valores
+				uniqueConstraints = @UniqueConstraint( //nome repete nome
+						columnNames = {"usuario_id", "role_id"},
 						name="unique_role_user"),//nome da constraint
 				joinColumns = @JoinColumn(//unindo a tabela usuario
-						name="usuario_id",//coluna da nova tabela q vai receber valor
+						name="usuario_id",//coluna da nova tabela-recebe valor
 						referencedColumnName = "id",//coluna de referencia para valor
-						table = "usuario",//tabela 1
+						table = "usuario",//tabela 1 fornece valor
 						unique = false,
 						foreignKey = @javax.persistence.ForeignKey(//nova fk
 								name="usuario_fk",
 								value=ConstraintMode.CONSTRAINT)),
 				inverseJoinColumns = @JoinColumn(//tabela 2 de referencia
-						name="role_id", //coluna da nova tabela q vai receber novo valor
+						name="role_id", //coluna da nova tabela-recebe valor
 						referencedColumnName = "id",//coluna de referencia para valor
-						table = "role",// tabla 2 q vai fornecer o valor
+						table = "role",// tabela 2 fornece valor
 						unique = false,
 						updatable = false,
 						foreignKey = @javax.persistence.ForeignKey(
