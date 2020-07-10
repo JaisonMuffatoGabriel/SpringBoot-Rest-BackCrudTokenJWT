@@ -36,7 +36,7 @@ public class WebConfigSecurity  extends WebSecurityConfigurerAdapter{
 		//url de logout - redireciona apos deslogar
 		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
 		
-		//mapeia url de logout e invalida  o usuario
+		//url de logout e invalida  o usuario
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		
 		//filtra requisicao de login para autenticacao
