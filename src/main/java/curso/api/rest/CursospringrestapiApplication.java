@@ -14,15 +14,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication //original
-@EntityScan(basePackages = {"curso.api.rest.model"})//faz scan nos pacotes p/ adm entidades
+@SpringBootApplication
+@EntityScan(basePackages = {"curso.api.rest.model"})// scan nos pacotes p/ adm entidades
 @ComponentScan(basePackages = {"curso.*"})// scan pacotes p/ injecao de dependencia
 @EnableJpaRepositories(basePackages = {"curso.api.rest.repository"})//abilita interface de repositorio
 @EnableTransactionManagement// gerencia as transacoes com o banco evitando problemas
 @EnableWebMvc //abilita mvc
 @RestController //abilita rest
 @EnableAutoConfiguration// gerencia configuracoes do projeto
-@EnableCaching //ativa o servico de cache - adiciono @cacheable no metodo q interessa cache -ex-list
+@EnableCaching //ativa o servico de cache
 public class CursospringrestapiApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
@@ -30,13 +30,13 @@ public class CursospringrestapiApplication implements WebMvcConfigurer {
 		System.out.println(new BCryptPasswordEncoder().encode("123"));
 	}
 	
-	//mapeamento Global que refletem em todo sistema - CORS
+	//mapeamento Global que refletem em todo sistema - CORS generico
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/usuario/**")
 		.allowedMethods("*")
 		.allowedOrigins("*");
-		//libera o mapeamento de usuario para todas as origens
+		
 		
 	}
 
